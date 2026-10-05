@@ -2,11 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import ProductList from "../../components/Products/ProductList/ProductList";
 import ProductDetailsModal from "../../components/Products/ProductModal/ProductDetailsModal";
 import PriceFilter from "../../components/Products/PriceFilter/PriceFilter";
-import Filter, { type SortOption } from "../../components/Products/Filter/Filter";
+import Filter, { SortSelect, type SortOption } from "../../components/Products/Filter/Filter";
 import SearchBar from "../../components/Common/SearchBar";
 import Pagination from "../../components/Common/Pagination";
+import { TruckIcon, ShieldIcon, RefreshIcon, HeadsetIcon } from "../../components/Common/Icons";
 import { getProducts } from "../../../api/services/productService";
 import type { Product } from "../../../types/product/product";
+import heroImg from "../../assets/hero.png";
 
 const PAGE_SIZES = [8, 12, 24];
 
@@ -137,74 +139,114 @@ const Home = () => {
 
   const closeModal = useCallback(() => setSelectedProduct(null), []);
 
+  const resetFilters = () => {
+    setSearch("");
+    setCategory("all");
+    setSort("default");
+    setPriceRange(null);
+    setPage(1);
+  };
+
   return (
     <main className="home-page">
-      <div className="container">
+      <section className="hero">
+        <div className="hero-inner">
+          <div className="hero-text">
+            <span className="hero-tag">New season sale</span>
+            <h1>Everything you love,<br />delivered to your door.</h1>
+            <p>Discover thousands of products across electronics, fashion, home and more at unbeatable prices.</p>
+            <a href="#products" className="btn btn-accent btn-lg">
+              Shop Now
+            </a>
+          </div>
+          <img src={heroImg} alt="" className="hero-img" />
+        </div>
+      </section>
+
+      <section className="perks">
+        <div className="perks-inner">
+          <div className="perk"><TruckIcon /><div><strong>Free Delivery</strong><span>On every order</span></div></div>
+          <div className="perk"><RefreshIcon /><div><strong>Easy Returns</strong><span>30-day policy</span></div></div>
+          <div className="perk"><ShieldIcon /><div><strong>Secure Payment</strong><span>100% protected</span></div></div>
+          <div className="perk"><HeadsetIcon /><div><strong>24/7 Support</strong><span>We're here to help</span></div></div>
+        </div>
+      </section>
+
+      <div className="container" id="products">
         <div className="page-heading">
-          <h1>Products</h1>
+          <h2>All Products</h2>
           <p>Find your favorite products</p>
         </div>
 
-        <div className="filters">
-          <SearchBar value={search} onChange={handleSearch} />
-
-          <Filter
-            categories={categories}
-            category={category}
-            onCategoryChange={handleCategory}
-            sort={sort}
-            onSortChange={handleSort}
-          />
-
-          {products.length > 0 && (
-            <PriceFilter
-              min={bounds.min}
-              max={bounds.max}
-              value={[minPrice, maxPrice]}
-              onChange={handlePriceRange}
+        <div className="shop-layout">
+          <aside className="sidebar">
+            <Filter
+              categories={categories}
+              category={category}
+              onCategoryChange={handleCategory}
             />
-          )}
+
+            {products.length > 0 && (
+              <PriceFilter
+                min={bounds.min}
+                max={bounds.max}
+                value={[minPrice, maxPrice]}
+                onChange={handlePriceRange}
+              />
+            )}
+
+            <button type="button" className="btn btn-outline btn-block" onClick={resetFilters}>
+              Reset Filters
+            </button>
+          </aside>
+
+          <section className="shop-main">
+            <div className="toolbar">
+              <SearchBar value={search} onChange={handleSearch} />
+              <SortSelect sort={sort} onSortChange={handleSort} />
+            </div>
+
+            {!loading && !error && visibleProducts.length > 0 && (
+              <div className="results-bar">
+                <span>
+                  Showing <strong>{(currentPage - 1) * pageSize + 1}–
+                  {Math.min(currentPage * pageSize, visibleProducts.length)}</strong> of{" "}
+                  <strong>{visibleProducts.length}</strong> products
+                </span>
+
+                <label>
+                  Per page:{" "}
+                  <select
+                    value={pageSize}
+                    onChange={(e) => handlePageSize(Number(e.target.value))}
+                  >
+                    {PAGE_SIZES.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            )}
+
+            <ProductList
+              products={paginatedProducts}
+              loading={loading}
+              error={error}
+              onRetry={handleRetry}
+              onViewDetails={setSelectedProduct}
+            />
+
+            {!loading && !error && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </section>
         </div>
-
-        {!loading && !error && visibleProducts.length > 0 && (
-          <div className="results-bar">
-            <span>
-              Showing {(currentPage - 1) * pageSize + 1}–
-              {Math.min(currentPage * pageSize, visibleProducts.length)} of{" "}
-              {visibleProducts.length} products
-            </span>
-
-            <label>
-              Per page:{" "}
-              <select
-                value={pageSize}
-                onChange={(e) => handlePageSize(Number(e.target.value))}
-              >
-                {PAGE_SIZES.map((size) => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        )}
-
-        <ProductList
-          products={paginatedProducts}
-          loading={loading}
-          error={error}
-          onRetry={handleRetry}
-          onViewDetails={setSelectedProduct}
-        />
-
-        {!loading && !error && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        )}
       </div>
 
       {selectedProduct && (

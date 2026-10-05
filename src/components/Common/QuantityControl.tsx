@@ -15,13 +15,14 @@ const QuantityControl = ({
 
   return (
     <div className="quantity-control">
-      <button aria-label="Decrease quantity" onClick={onDecrement}>
-        -
+      <button type="button" aria-label="Decrease quantity" onClick={onDecrement}>
+        −
       </button>
 
       <span>{quantity}</span>
 
       <button
+        type="button"
         aria-label="Increase quantity"
         onClick={onIncrement}
         disabled={atMax}

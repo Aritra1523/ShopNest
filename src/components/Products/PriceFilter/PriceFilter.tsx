@@ -15,11 +15,10 @@ const PriceFilter = ({ min, max, value, onChange }: PriceFilterProps) => {
 
   return (
     <div className="price-filter">
+      <h3 className="filter-title">Price</h3>
       <div className="price-filter-header">
-        <span>Price</span>
-        <span>
-          {formatPrice(low)} – {formatPrice(high)}
-        </span>
+        <span>{formatPrice(low)}</span>
+        <span>{formatPrice(high)}</span>
       </div>
 
       <div className="range-slider">

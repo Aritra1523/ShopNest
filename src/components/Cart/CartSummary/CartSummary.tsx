@@ -14,37 +14,32 @@ const CartSummary = ({ totalItems, subtotal, onClear }: CartSummaryProps) => {
 
   return (
     <aside className="cart-summary">
-      <h2>Cart Summary</h2>
+      <h2>Order Summary</h2>
 
       <div className="summary-row">
-        <span>Total Items</span>
-        <span>{totalItems}</span>
-      </div>
-
-      <div className="summary-row">
-        <span>Subtotal</span>
+        <span>Items ({totalItems})</span>
         <span>{formatPrice(subtotal)}</span>
       </div>
 
       <div className="summary-row">
         <span>Shipping</span>
-        <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
+        <span className="free">{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
       </div>
-
-      <hr />
 
       <div className="summary-total">
-        <span>Total Price</span>
+        <span>Total</span>
         <strong>{formatPrice(totalPrice)}</strong>
       </div>
+
+      <button className="btn btn-accent btn-lg btn-block">Proceed to Checkout</button>
+
+      <Link to="/" className="btn btn-outline btn-block">
+        Continue Shopping
+      </Link>
 
       <button className="clear-cart-btn" onClick={onClear}>
         Clear Cart
       </button>
-
-      <Link to="/" className="btn-link btn-outline">
-        Continue Shopping
-      </Link>
     </aside>
   );
 };

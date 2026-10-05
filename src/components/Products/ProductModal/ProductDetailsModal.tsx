@@ -3,6 +3,8 @@ import Swal from "sweetalert2";
 import type { Product } from "../../../../types/product/product";
 import { useCart } from "../../../hooks/useCart";
 import QuantityControl from "../../Common/QuantityControl";
+import Rating from "../../Common/Rating";
+import { CartIcon, CloseIcon, TruckIcon, ShieldIcon } from "../../Common/Icons";
 import { formatPrice } from "../../../../utils/formatPrice";
 
 interface ProductDetailsModalProps {
@@ -15,6 +17,10 @@ const ProductDetailsModal = ({ product, onClose }: ProductDetailsModalProps) => 
   const cartItem = cart.find((item) => item.id === product.id);
   const images = product.images?.length ? product.images : [product.thumbnail];
   const [activeImage, setActiveImage] = useState(images[0]);
+  const outOfStock = product.stock !== undefined && product.stock <= 0;
+
+  const discount = product.discountPercentage ? Math.round(product.discountPercentage) : 0;
+  const originalPrice = discount > 0 ? product.price / (1 - discount / 100) : null;
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -40,6 +46,8 @@ const ProductDetailsModal = ({ product, onClose }: ProductDetailsModalProps) => 
       icon: "success",
       timer: 1200,
       showConfirmButton: false,
+      toast: true,
+      position: "top-end",
     });
   };
 
@@ -53,11 +61,13 @@ const ProductDetailsModal = ({ product, onClose }: ProductDetailsModalProps) => 
         onClick={(e) => e.stopPropagation()}
       >
         <button className="modal-close" aria-label="Close" onClick={onClose}>
-          ×
+          <CloseIcon />
         </button>
 
         <div className="modal-gallery">
-          <img src={activeImage} alt={product.title} className="modal-main-image" />
+          <div className="modal-main">
+            <img src={activeImage} alt={product.title} className="modal-main-image" />
+          </div>
 
           {images.length > 1 && (
             <div className="modal-thumbs">
@@ -78,21 +88,29 @@ const ProductDetailsModal = ({ product, onClose }: ProductDetailsModalProps) => 
           <span className="product-category">{product.category}</span>
           <h2>{product.title}</h2>
 
-          {product.brand && <p className="modal-meta">Brand: {product.brand}</p>}
-          {product.rating !== undefined && (
-            <p className="modal-meta">Rating: ⭐ {product.rating.toFixed(1)} / 5</p>
-          )}
+          {product.brand && <p className="modal-meta">by <strong>{product.brand}</strong></p>}
+          {product.rating !== undefined && <Rating value={product.rating} />}
+
+          <div className="price-row">
+            <strong className="modal-price">{formatPrice(product.price)}</strong>
+            {originalPrice && <span className="price-old">{formatPrice(originalPrice)}</span>}
+            {discount > 0 && <span className="badge-inline">{discount}% off</span>}
+          </div>
+
           {product.stock !== undefined && (
-            <p className="modal-meta">
-              {product.stock > 0 ? `In stock: ${product.stock}` : "Out of stock"}
+            <p className={outOfStock ? "stock-out" : "stock-in"}>
+              {outOfStock ? "Out of stock" : `In stock (${product.stock} available)`}
             </p>
           )}
 
-          <p>{product.description}</p>
+          <p className="modal-description">{product.description}</p>
 
-          <div className="product-bottom">
-            <strong className="modal-price">{formatPrice(product.price)}</strong>
+          <div className="modal-perks">
+            <span><TruckIcon width={18} height={18} /> Free delivery</span>
+            <span><ShieldIcon width={18} height={18} /> Secure payment</span>
+          </div>
 
+          <div className="modal-actions">
             {cartItem ? (
               <QuantityControl
                 quantity={cartItem.quantity}
@@ -101,8 +119,13 @@ const ProductDetailsModal = ({ product, onClose }: ProductDetailsModalProps) => 
                 onDecrement={() => dispatch({ type: "decrement", payload: product.id })}
               />
             ) : (
-              <button onClick={handleAddToCart} disabled={product.stock !== undefined && product.stock <= 0}>
-                {product.stock !== undefined && product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={handleAddToCart}
+                disabled={outOfStock}
+              >
+                <CartIcon width={18} height={18} />
+                {outOfStock ? "Out of Stock" : "Add to Cart"}
               </button>
             )}
           </div>

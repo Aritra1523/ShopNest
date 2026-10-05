@@ -33,8 +33,8 @@ const Cart = () => {
     <main className="cart-page">
       <div className="container">
         <div className="page-heading">
-          <h1>Your Cart</h1>
-          <p>Review your selected products</p>
+          <h1>Shopping Cart</h1>
+          <p>{cartCount} {cartCount === 1 ? "item" : "items"} in your cart</p>
         </div>
 
         {cart.length === 0 ? (
