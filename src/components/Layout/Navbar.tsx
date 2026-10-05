@@ -1,9 +1,11 @@
 import { Link, NavLink } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
-import { CartIcon } from "../Common/Icons";
+import { CartIcon, MoonIcon, SunIcon } from "../Common/Icons";
+import { useTheme } from "../../hooks/useTheme";
 
 const Navbar = () => {
   const { cartCount } = useCart();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="site-header">
@@ -19,6 +21,16 @@ const Navbar = () => {
           </Link>
 
           <div className="nav-links">
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={theme === "dark" ? "Light mode" : "Dark mode"}
+            >
+              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+            </button>
+
             <NavLink to="/" end className="nav-link">
               Home
             </NavLink>

@@ -1,35 +1,84 @@
-# React + TypeScript + Vite
+# 🛍️ ShopNest
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A modern e-commerce storefront built with **React 19**, **TypeScript** and **Vite**. Browse products, search and filter, view details, and manage a persistent shopping cart.
 
-Currently, two official plugins are available:
+Product data comes from the free [DummyJSON](https://dummyjson.com/products) API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
 
-## React Compiler
+**Shopping**
+- Product grid with images, ratings, discount badges, old/new price and low-stock warnings
+- Product details modal with image gallery, brand, stock status and description
+- Skeleton loading states, plus friendly error and empty states with retry
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+**Search, filter and sort**
+- Live search by product name
+- Category sidebar and dual-handle price range slider
+- Sort by price (low/high) or name (A–Z / Z–A)
+- Pagination with selectable page size (8 / 12 / 24)
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+**Cart**
+- Add, increment, decrement, remove and clear cart
+- Quantity is capped at available stock, and duplicate items are merged
+- Item is removed automatically when quantity reaches zero
+- Cart is saved to `localStorage` and survives page refresh
+- Order summary with totals (free shipping)
 
-## Expanding the Oxlint configuration
+**UI/UX**
+- Responsive layout (desktop, tablet and mobile)
+- Hero banner, perks strip, sticky header and multi-column footer
+- Toast notifications via SweetAlert2
+- Keyboard accessible (Esc closes the modal, focus styles, ARIA labels)
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## 🧰 Tech Stack
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+| Area | Tools |
+| --- | --- |
+| Framework | React 19, React Router 7 |
+| Language | TypeScript |
+| Build tool | Vite (with React Compiler) |
+| State | Context API + `useReducer` |
+| HTTP | Axios |
+| Alerts | SweetAlert2 |
+| Linting | Oxlint |
+| Styling | Plain CSS with design tokens (no UI library) |
+
+## 🚀 Getting Started
+
+**Prerequisites:** Node.js 18+ and npm.
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Aritra1523/ShopNest.git
+cd ShopNest
+
+
+
+
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+```
+
+## 🎨 Customization
+
+- **Colors and theme:** edit the CSS variables in `:root` at the top of `src/index.css` (`--brand`, `--accent`, `--nav`, etc.).
+- **Currency:** change `CURRENCY_SYMBOL` in `utils/formatPrice.ts` (default `₹`).
+- **API source:** change `baseURL` in `api/baseUrl/url.ts`. Keep the response shape matching `types/product/product.ts`.
+- **Page sizes:** edit `PAGE_SIZES` in `src/pages/Home/Home.tsx`.
+
+## 🗺️ Roadmap
+
+- [ ] Checkout flow and order confirmation
+- [ ] Wishlist / favourites
+- [ ] User authentication
+- [ ] Product reviews
+- [ ] Dark mode
+
+## 🙌 Acknowledgements
+
+- Product data by [DummyJSON](https://dummyjson.com)
+- Alerts by [SweetAlert2](https://sweetalert2.github.io)
+
+## 📄 License
+
+This project is for learning and portfolio purposes. Add a license of your choice (for example MIT) before reusing it commercially.
