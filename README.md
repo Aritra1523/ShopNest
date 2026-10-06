@@ -57,23 +57,6 @@ cd ShopNest
 
 ```
 
-```
-
-## 🎨 Customization
-
-- **Colors and theme:** edit the CSS variables in `:root` at the top of `src/index.css` (`--brand`, `--accent`, `--nav`, etc.).
-- **Currency:** change `CURRENCY_SYMBOL` in `utils/formatPrice.ts` (default `₹`).
-- **API source:** change `baseURL` in `api/baseUrl/url.ts`. Keep the response shape matching `types/product/product.ts`.
-- **Page sizes:** edit `PAGE_SIZES` in `src/pages/Home/Home.tsx`.
-
-## 🗺️ Roadmap
-
-- [ ] Checkout flow and order confirmation
-- [ ] Wishlist / favourites
-- [ ] User authentication
-- [ ] Product reviews
-- [ ] Dark mode
-
 ## 🙌 Acknowledgements
 
 - Product data by [DummyJSON](https://dummyjson.com)
